@@ -7,8 +7,9 @@
 
 ## 2. Estado Actual (Snapshot)
 * **Arquitectura:** Definida (Modelo v3.1).
-* **Bbase de Datos:** Campos creados en Sales Layer (Productos, Variantes y Tabla Temas).
-* **Pendiente:** Desarrollo del script Python (`dam_ingest.py`) y despliegue.
+* **Base de Datos:** Campos creados en Sales Layer (Productos, Variantes y Tabla Temas).
+* **Scaffolding:** ✅ Completado — estructura Python base implementada.
+* **Pendiente:** Integración con API Sales Layer (credenciales + endpoints) y despliegue.
 
 ## 3. Arquitectura de Datos (Los 3 Silos)
 El sistema gestiona imágenes en 3 tablas distintas dentro de Sales Layer:
@@ -56,12 +57,40 @@ El script debe traducir automáticamente los nombres antiguos:
 * `_5` -> Tratar como `_LF_01`
 * `_4` -> Tratar como `_FT_01`
 
-## 6. Siguientes Pasos (Roadmap)
-1.  **Scripting:** Crear `dam_ingest.py`. Debe:
-    * Conectar a API Sales Layer.
-        * Parsear nombres de archivo.
-            * Detectar si el ID es Producto o Tema.
-                * Vincular la imagen al campo correcto (`img_xx`).
-                    * Rellena la tabla auxiliar de metadatos (`dam_type`, `dam_context`).
-                    2.  **Ingesta:** Probar con 10 imágenes piloto.
-                    3.  **Documentación:** Generar guía final para Agencias.
+## 6. Archivos Clave
+
+| Archivo | Descripción | Estado |
+|---------|-------------|--------|
+| `src/config.py` | Configuración central: mappings v3.1, campos por tabla, legacy map | ✅ |
+| `src/parser.py` | Parser de nomenclatura + clasificador de identificadores | ✅ |
+| `src/saleslayer.py` | Cliente API Sales Layer (get/upload/set_metadata) | 🔄 Esqueleto |
+| `src/dam_ingest.py` | Entry point: procesa directorio y sube a Sales Layer | 🔄 Esqueleto funcional |
+| `tests/test_parser.py` | Suite de tests del parser (17 tests pasando) | ✅ |
+| `.env.example` | Template credenciales (SL_API_URL, SL_CONNECTOR_ID, SL_SECRET_KEY) | ✅ |
+
+## 7. Decisiones Tomadas
+
+### Uso de dataclass ParsedAsset
+Se eligió una estructura de datos inmutable para representar el resultado del parsing: `ParsedAsset(identifier, entity_type, asset_type, series, field_id, valid, error_msg)`. Facilita testing y trazabilidad.
+
+### Mapeos centralizados en config.py
+Todos los mappings (ASSET_TYPE_MAP, METADATA_MAP, LEGACY_MAP) y definiciones de campos (PRODUCT_FIELDS, VARIANT_FIELDS, THEME_FIELDS) viven en un único archivo de configuración. Cambios de negocio no requieren tocar lógica.
+
+### Ambigüedad identificadores alfabéticos
+Detectado que identificadores como "DALIA" vs "SOLAR" son ambiguos sin consultar la BD. El parser los marca como `theme` por defecto. La resolución definitiva requiere lookup a Sales Layer para verificar existencia en tablas de productos vs temas.
+
+## 8. Deuda Técnica Conocida
+
+- **Resolver ambigüedad product vs theme:** Identificadores alfabéticos necesitan consulta a Sales Layer para determinar tipo de entidad correcto.
+- **Validación de credenciales faltante:** El SalesLayerClient valida que existan las variables de entorno pero no verifica que sean válidas contra la API.
+- **Manejo de rate limits:** No implementado aún. Sales Layer puede tener límites de requests/segundo.
+
+## 9. Próximos Pasos (Roadmap)
+
+1. ✅ **Estructura base:** Scaffold Python completo (.gitignore, .env.example, requirements.txt, src/, tests/).
+2. ✅ **Parser de nomenclatura:** Implementado con soporte v3.1 + legacy. Tests pasando.
+3. 🔄 **Cliente Sales Layer:** Implementar métodos reales de API (get_product, get_variant, get_theme, upload_image, set_metadata). Requiere credenciales válidas + documentación API.
+4. ⬜ **Resolver ambigüedad identificadores:** Implementar lookup a BD para casos como "DALIA" vs "SOLAR".
+5. ⬜ **Integración completa dam_ingest.py:** Conectar parser + cliente real + manejo de errores.
+6. ⬜ **Prueba piloto:** 10 imágenes reales contra Sales Layer de staging/producción.
+7. ⬜ **Documentación para agencias:** Guía de nomenclatura + proceso de subida.
