@@ -8,8 +8,8 @@
 ## 2. Estado Actual (Snapshot)
 * **Arquitectura:** Definida (Modelo v3.2 - Incluye Vídeo).
 * **Base de Datos:** Campos creados en Sales Layer (Productos, Variantes y Tabla Temas) para imágenes y vídeos.
-* **Scaffolding:** ✅ Completado — estructura Python base implementada.
-* **Pendiente:** Integración con API Sales Layer (credenciales + endpoints), actualización del parser para vídeo y despliegue.
+* **Scaffolding:** ✅ Completado v3.2 — estructura Python + parser + tests funcionando.
+* **Pendiente:** Integración con API Sales Layer (BLOQUEADO: necesita credenciales + docs API).
 
 ## 3. Arquitectura de Datos (Los 3 Silos + Vídeo)
 El sistema gestiona activos en tablas distintas dentro de Sales Layer. Se han añadido campos de vídeo a las tablas principales.
@@ -77,23 +77,31 @@ El script debe traducir automáticamente los nombres antiguos (solo aplica a im�
 
 | Archivo | Descripción | Estado |
 |---------|-------------|--------|
-| `src/config.py` | Configuración central: mappings v3.2, campos por tabla, legacy map | �� Actualizar |
-| `src/parser.py` | Parser de nomenclatura + clasificador de identificadores | �� Actualizar |
-| `src/saleslayer.py` | Cliente API Sales Layer (get/upload/set_metadata) | �� Esqueleto |
-| `src/dam_ingest.py` | Entry point: procesa directorio y sube a Sales Layer | �� Esqueleto funcional |
-| `tests/test_parser.py` | Suite de tests del parser (17 tests pasando) | �� Actualizar |
+| `src/config.py` | Configuración central: mappings v3.2 (imágenes + vídeos), campos por tabla, legacy map | ✅ COMPLETO v3.2 |
+| `src/parser.py` | Parser de nomenclatura + clasificador de identificadores + detección media_type | ✅ COMPLETO v3.2 |
+| `src/saleslayer.py` | Cliente API Sales Layer (get/upload/set_metadata) | 🔄 ESQUELETO (requiere credenciales) |
+| `src/dam_ingest.py` | Entry point: procesa directorio y sube a Sales Layer | 🔄 ESQUELETO FUNCIONAL (falta integrar API) |
+| `tests/test_parser.py` | Suite de tests del parser (25/25 tests pasando: imágenes, vídeos, legacy) | ✅ COMPLETO v3.2 |
 | `.env.example` | Template credenciales (SL_API_URL, SL_CONNECTOR_ID, SL_SECRET_KEY) | ✅ |
+| `output/PROTOCOLO_VIDEO.md` | Especificación normativa de los 5 tipos de vídeo | ✅ |
+| `reference/VIDEO_PLAYBOOKS.md` | Guías de producción de vídeo por tipo para agencias | ✅ |
 
 ## 7. Decisiones Tomadas
 
-### Uso de dataclass ParsedAsset
-Se eligió una estructura de datos inmutable para representar el resultado del parsing: `ParsedAsset(identifier, entity_type, asset_type, series, field_id, valid, error_msg)`. Facilita testing y trazabilidad.
+### Uso de dataclass ParsedAsset (Actualizada en v3.2)
+Se eligió una estructura de datos inmutable para representar el resultado del parsing. En v3.2 incluye `media_type` ("image" o "video") y metadata (dam_type, dam_context). Facilita testing y trazabilidad.
 
 ### Mapeos centralizados en config.py
-Todos los mappings (ASSET_TYPE_MAP, METADATA_MAP, LEGACY_MAP) y definiciones de campos (PRODUCT_FIELDS, VARIANT_FIELDS, THEME_FIELDS) viven en un único archivo de configuración. Cambios de negocio no requieren tocar lógica.
+Todos los mappings (ASSET_TYPE_MAP, METADATA_MAP, LEGACY_MAP) y definiciones de campos (PRODUCT_FIELDS, VARIANT_FIELDS, THEME_FIELDS) viven en un único archivo de configuración. Cambios de negocio no requieren tocar lógica. En v3.2 se extendió con 5 códigos de vídeo y separación de extensiones válidas (IMAGE_EXTENSIONS, VIDEO_EXTENSIONS).
+
+### Legacy solo aplica a imágenes
+La lógica de migración (_A -> _PK_01, _5 -> _LF_01, _4 -> _FT_01) solo se aplica a archivos de imagen. Los vídeos son nuevos en v3.2 y no tienen nomenclatura heredada.
 
 ### Ambigüedad identificadores alfabéticos
-Detectado que identificadores como "DALIA" vs "SOLAR" son ambiguos sin consultar la BD. El parser los marca como `theme` por defecto. La resolución definitiva requiere lookup a Sales Layer para verificar existencia en tablas de productos vs temas.
+Detectado que identificadores como "DALIA" vs "SOLAR" son ambiguos sin consultar la BD. El parser los marca como `theme` por defecto (uppercase alpha) o `product` (alphanumeric). La resolución definitiva requiere lookup a Sales Layer para verificar existencia en tablas de productos vs temas.
+
+### Vídeos en VARIANTES (decisión de negocio)
+Los SKUs (variantes) NO tienen campos de vídeo. Los vídeos solo se asocian a modelos (PRODUCTOS) y temas (TEMAS_MARKETING). Justificación: un vídeo de instalación aplica al producto completo, no a cada SKU/color/packaging.
 
 ## 8. Deuda Técnica Conocida
 
@@ -104,10 +112,10 @@ Detectado que identificadores como "DALIA" vs "SOLAR" son ambiguos sin consultar
 ## 9. Próximos Pasos (Roadmap)
 
 1. ✅ **Estructura base:** Scaffold Python completo (.gitignore, .env.example, requirements.txt, src/, tests/).
-2. ✅ **Parser de nomenclatura:** Implementado con soporte v3.1 + legacy. Tests pasando.
-3. �� **Actualización a v3.2:** Incluir lógica de detección de vídeo (mp4) y nuevos códigos (`VMK`, `VINS`, etc.) en `config.py` y `parser.py`.
-4. �� **Cliente Sales Layer:** Implementar métodos reales de API (get_product, get_variant, get_theme, upload_image, upload_video, set_metadata). Requiere credenciales válidas + documentación API.
-5. ⬜ **Resolver ambigüedad identificadores:** Implementar lookup a BD para casos como "DALIA" vs "SOLAR".
-6. ⬜ **Integración completa dam_ingest.py:** Conectar parser + cliente real + manejo de errores.
-7. ⬜ **Prueba piloto:** 10 activos reales (imágenes y vídeos) contra Sales Layer de staging/producción.
-8. ⬜ **Documentación para agencias:** Guía de nomenclatura + proceso de subida (Incluyendo Playbooks de Vídeo).
+2. ✅ **Parser de nomenclatura:** Implementado con soporte v3.1 + legacy. 17 tests pasando.
+3. ✅ **Actualización a v3.2:** Lógica de detección de vídeo (mp4/webm), nuevos códigos (VMK, VINS, VCN, VCF, VTR), metadata map extendido. 25 tests pasando. Documentación de vídeo creada (PROTOCOLO_VIDEO.md + VIDEO_PLAYBOOKS.md).
+4. 🔄 **Cliente Sales Layer:** Implementar métodos reales de API (get_product, get_variant, get_theme, upload_image, upload_video, set_metadata). **BLOQUEADO: Requiere credenciales válidas + documentación API.**
+5. ⬜ **Resolver ambigüedad identificadores:** Implementar lookup a BD para casos como "DALIA" vs "SOLAR" (requiere cliente API funcional).
+6. ⬜ **Integración completa dam_ingest.py:** Conectar parser + cliente real + manejo de errores + rate limits.
+7. ⬜ **Prueba piloto:** 10 activos reales (5 imágenes + 5 vídeos) contra Sales Layer de staging/producción.
+8. ⬜ **Documentación para agencias:** Guía de nomenclatura consolidada + proceso de subida (incorporar playbooks de vídeo).
