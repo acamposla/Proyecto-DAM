@@ -1,10 +1,10 @@
-"""DAM Ingest - Script principal de clasificación automática de imágenes.
+"""DAM Ingest - Script principal de clasificación automática de activos.
 
-Lee archivos de un directorio, parsea sus nombres según nomenclatura v3.1,
-y los sube al campo correspondiente en Sales Layer.
+Lee archivos de un directorio, parsea sus nombres según nomenclatura v3.2,
+y los sube al campo correspondiente en Sales Layer (imágenes y vídeos).
 
 Uso:
-    python -m src.dam_ingest <directorio_imagenes>
+    python -m src.dam_ingest <directorio_activos>
 """
 
 import sys
@@ -31,7 +31,7 @@ def get_field_id(asset: ParsedAsset) -> str | None:
 
 
 def process_directory(directory: Path) -> None:
-    """Procesa todos los archivos de imagen en un directorio."""
+    """Procesa todos los activos (imágenes y vídeos) en un directorio."""
     files = sorted(directory.iterdir())
     ok, skip, error = 0, 0, 0
 
@@ -57,16 +57,20 @@ def process_directory(directory: Path) -> None:
             continue
 
         legacy_tag = " [LEGACY]" if asset.is_legacy else ""
+        media_tag = f"[{asset.media_type.upper()}]"
         print(
             f"  OK    {filepath.name} -> "
             f"{asset.target}/{asset.identifier}.{field_id} "
-            f"(serie:{asset.series}, type:{asset.dam_type}, "
+            f"{media_tag} (serie:{asset.series}, type:{asset.dam_type}, "
             f"context:{asset.dam_context}){legacy_tag}"
         )
         ok += 1
 
-        # TODO: Subir imagen a Sales Layer
-        # client.upload_image(asset.target, asset.identifier, field_id, filepath)
+        # TODO: Subir activo a Sales Layer
+        # if asset.media_type == "video":
+        #     client.upload_video(asset.target, asset.identifier, field_id, filepath)
+        # else:
+        #     client.upload_image(asset.target, asset.identifier, field_id, filepath)
         # client.set_metadata(asset.target, asset.identifier, asset.dam_type, asset.dam_context)
 
     print(f"\nResultado: {ok} OK / {skip} SKIP / {error} ERROR")
@@ -74,7 +78,7 @@ def process_directory(directory: Path) -> None:
 
 def main():
     if len(sys.argv) < 2:
-        print("Uso: python -m src.dam_ingest <directorio_imagenes>")
+        print("Uso: python -m src.dam_ingest <directorio_activos>")
         sys.exit(1)
 
     directory = Path(sys.argv[1])
@@ -82,7 +86,7 @@ def main():
         print(f"Error: {directory} no es un directorio válido")
         sys.exit(1)
 
-    print(f"DAM Ingest v3.1 - Procesando: {directory}\n")
+    print(f"DAM Ingest v3.2 - Procesando: {directory}\n")
     process_directory(directory)
 
 

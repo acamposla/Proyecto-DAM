@@ -6,16 +6,16 @@
 * **Filosofía:** "Zero-Click Metadata". El diseñador nombra el archivo, el sistema (Script Python) lo clasifica.
 
 ## 2. Estado Actual (Snapshot)
-* **Arquitectura:** Definida (Modelo v3.1).
-* **Base de Datos:** Campos creados en Sales Layer (Productos, Variantes y Tabla Temas).
+* **Arquitectura:** Definida (Modelo v3.2 - Incluye Vídeo).
+* **Base de Datos:** Campos creados en Sales Layer (Productos, Variantes y Tabla Temas) para imágenes y vídeos.
 * **Scaffolding:** ✅ Completado — estructura Python base implementada.
-* **Pendiente:** Integración con API Sales Layer (credenciales + endpoints) y despliegue.
+* **Pendiente:** Integración con API Sales Layer (credenciales + endpoints), actualización del parser para vídeo y despliegue.
 
-## 3. Arquitectura de Datos (Los 3 Silos)
-El sistema gestiona imágenes en 3 tablas distintas dentro de Sales Layer:
+## 3. Arquitectura de Datos (Los 3 Silos + Vídeo)
+El sistema gestiona activos en tablas distintas dentro de Sales Layer. Se han añadido campos de vídeo a las tablas principales.
 
 ### A. Tabla PRODUCTOS (Modelos)
-Campos de imagen (Multi-image) configurados:
+*Campos de Imagen (Multi-image):*
 * `img_pk` (Packshot Main)
 * `img_kv` (Key Visual Horizontal)
 * `img_kvv` (Key Visual Vertical)
@@ -23,9 +23,15 @@ Campos de imagen (Multi-image) configurados:
 * `img_fmd` (Mosaic Parts)
 * `img_ft` (Features/Iconos)
 * `img_lf` (Lifestyle)
+*Campos de Vídeo (Enlace/Archivo):*
+* `vid_mk` (Marketing/Demo)
+* `vid_ins` (Instalación Física)
+* `vid_cn` (Conectividad/IoT)
+* `vid_cf` (Configuración App)
+* `vid_tr` (Troubleshooting)
 
 ### B. Tabla VARIANTES (SKUs de Venta)
-Campos de imagen configurados:
+*Campos de Imagen:*
 * `img_pk` (Producto suelto)
 * `img_2pk` (Packaging/Caja sola)
 * `img_3pk` (Combo Producto + Caja)
@@ -33,13 +39,16 @@ Campos de imagen configurados:
 ### C. Tabla TEMAS DE MARKETING (Nueva Entidad)
 Tabla de Referencia (`TEMAS_MARKETING`) para conceptos transversales (Solar, Zigbee).
 * **ID:** Código del tema (ej: `SOLAR`).
-* Campos: `img_kv`, `img_lf`, `img_fm`, `img_fmd`, `img_ft`.
+* *Campos Imagen:* `img_kv`, `img_lf`, `img_fm`, `img_fmd`, `img_ft`.
+* *Campos Vídeo:* `vid_mk`, `vid_ins`, `vid_cn`, `vid_cf`, `vid_tr`.
 
-## 4. El Algoritmo de Nomenclatura (v3.1)
-Todo archivo nuevo debe cumplir: `IDENTIFICADOR` + `_` + `TIPO` + `_` + `SERIE` + `.ext`
-*(Ejemplo: `401275_PK_01.jpg` o `SOLAR_KV_02.jpg`)*
+## 4. El Algoritmo de Nomenclatura (v3.2)
+Todo archivo nuevo debe cumplir: `IDENTIFICADOR` + `_` + `CÓDIGO` + `_` + `SERIE` + `.ext`
+*(Ejemplo: `401275_PK_01.jpg`, `SOLAR_KV_02.jpg` o `401275_VCN_01.mp4`)*
 
 **Diccionario de Códigos (Mapping):**
+
+*IMÁGENES (2 Letras - Generalmente):*
 * `PK` -> Packshot (Standard)
 * `2PK` -> Packaging Box
 * `3PK` -> Combo
@@ -51,8 +60,15 @@ Todo archivo nuevo debe cumplir: `IDENTIFICADOR` + `_` + `TIPO` + `_` + `SERIE` 
 * `FMD` -> Mosaic Decomposed
 * `DM` -> Dimensions
 
+*VÍDEOS (3 Letras - Nuevo v3.2):*
+* `VMK` -> Marketing (Engloba Marketing y Funcionamiento)
+* `VINS` -> Instalación (Física/Hardware)
+* `VCN` -> Conectividad (IoT/Pairing)
+* `VCF` -> Configuración (App/Software)
+* `VTR` -> Troubleshooting (Soporte/Ayuda)
+
 ## 5. Lógica de Migración (Legacy)
-El script debe traducir automáticamente los nombres antiguos:
+El script debe traducir automáticamente los nombres antiguos (solo aplica a imágenes):
 * `_A` -> Tratar como `_PK_01`
 * `_5` -> Tratar como `_LF_01`
 * `_4` -> Tratar como `_FT_01`
@@ -61,11 +77,11 @@ El script debe traducir automáticamente los nombres antiguos:
 
 | Archivo | Descripción | Estado |
 |---------|-------------|--------|
-| `src/config.py` | Configuración central: mappings v3.1, campos por tabla, legacy map | ✅ |
-| `src/parser.py` | Parser de nomenclatura + clasificador de identificadores | ✅ |
-| `src/saleslayer.py` | Cliente API Sales Layer (get/upload/set_metadata) | 🔄 Esqueleto |
-| `src/dam_ingest.py` | Entry point: procesa directorio y sube a Sales Layer | 🔄 Esqueleto funcional |
-| `tests/test_parser.py` | Suite de tests del parser (17 tests pasando) | ✅ |
+| `src/config.py` | Configuración central: mappings v3.2, campos por tabla, legacy map | �� Actualizar |
+| `src/parser.py` | Parser de nomenclatura + clasificador de identificadores | �� Actualizar |
+| `src/saleslayer.py` | Cliente API Sales Layer (get/upload/set_metadata) | �� Esqueleto |
+| `src/dam_ingest.py` | Entry point: procesa directorio y sube a Sales Layer | �� Esqueleto funcional |
+| `tests/test_parser.py` | Suite de tests del parser (17 tests pasando) | �� Actualizar |
 | `.env.example` | Template credenciales (SL_API_URL, SL_CONNECTOR_ID, SL_SECRET_KEY) | ✅ |
 
 ## 7. Decisiones Tomadas
@@ -89,8 +105,9 @@ Detectado que identificadores como "DALIA" vs "SOLAR" son ambiguos sin consultar
 
 1. ✅ **Estructura base:** Scaffold Python completo (.gitignore, .env.example, requirements.txt, src/, tests/).
 2. ✅ **Parser de nomenclatura:** Implementado con soporte v3.1 + legacy. Tests pasando.
-3. 🔄 **Cliente Sales Layer:** Implementar métodos reales de API (get_product, get_variant, get_theme, upload_image, set_metadata). Requiere credenciales válidas + documentación API.
-4. ⬜ **Resolver ambigüedad identificadores:** Implementar lookup a BD para casos como "DALIA" vs "SOLAR".
-5. ⬜ **Integración completa dam_ingest.py:** Conectar parser + cliente real + manejo de errores.
-6. ⬜ **Prueba piloto:** 10 imágenes reales contra Sales Layer de staging/producción.
-7. ⬜ **Documentación para agencias:** Guía de nomenclatura + proceso de subida.
+3. �� **Actualización a v3.2:** Incluir lógica de detección de vídeo (mp4) y nuevos códigos (`VMK`, `VINS`, etc.) en `config.py` y `parser.py`.
+4. �� **Cliente Sales Layer:** Implementar métodos reales de API (get_product, get_variant, get_theme, upload_image, upload_video, set_metadata). Requiere credenciales válidas + documentación API.
+5. ⬜ **Resolver ambigüedad identificadores:** Implementar lookup a BD para casos como "DALIA" vs "SOLAR".
+6. ⬜ **Integración completa dam_ingest.py:** Conectar parser + cliente real + manejo de errores.
+7. ⬜ **Prueba piloto:** 10 activos reales (imágenes y vídeos) contra Sales Layer de staging/producción.
+8. ⬜ **Documentación para agencias:** Guía de nomenclatura + proceso de subida (Incluyendo Playbooks de Vídeo).
