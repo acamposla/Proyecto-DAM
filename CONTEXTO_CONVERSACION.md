@@ -1,53 +1,72 @@
 # Contexto de Conversación
 
 ## Última actualización
-2026-02-12 (Final de sesión)
+2026-02-13 (Final de sesión)
 
 ## ¿Qué estábamos haciendo?
-Actualización del proyecto DAM de v3.1 (solo imágenes) a v3.2 (imágenes + vídeo). El usuario documentó 5 tipos de vídeo basados en el Customer Journey de Garza Smart Home y todo el código se actualizó para soportar esta nueva funcionalidad.
+Mejoras en la documentación de producción de vídeo (VIDEO_PLAYBOOKS.md). Sesión centrada en estandarizar estructura de playbooks y explorar estrategia multiidioma para vídeos.
 
 ## Estado de la tarea actual
-**COMPLETADO:** Actualización v3.2 completamente funcional y testeada.
+**COMPLETADO:** Mejoras en playbooks de vídeo y documentación de ejemplo. Tema abierto: estrategia multiidioma.
 
-### Cambios realizados en esta sesión
+### Cambios realizados en esta sesión (2026-02-13)
 
-#### 1. Documentación de vídeo (por el usuario)
-- `PROTOCOLO_VIDEO.md`: Especificación normativa de los 5 tipos de vídeo.
-- `VIDEO_PLAYBOOKS.md`: Guías de producción para agencias (duración, estilo, estructura).
-- Ambos documentos reubicados: PROTOCOLO_VIDEO.md en `output/` (specs), VIDEO_PLAYBOOKS.md en `reference/` (guías).
+#### 1. Actualizaciones en VIDEO_PLAYBOOKS.md (reference/)
 
-#### 2. Código actualizado a v3.2
+**VINS (Instalación) — Punto 2:**
+- Añadidos: Presentación del producto al inicio (antes de empezar instalación).
+- Añadidos: Resumen intro ("¿Qué vas a ver?") antes de estructura.
+- Añadidos: Mantenimiento (2-3 tips prácticos) después de instalación.
+- Añadidos: CTA Soporte (customer.garza.es) en cierre (sustituye "Cierre" genérico).
 
-**config.py — COMPLETO v3.2:**
-- Añadidos 5 códigos de vídeo a PRODUCT_FIELDS: `VMK` (Marketing), `VINS` (Instalación), `VCN` (Conectividad), `VCF` (Configuración), `VTR` (Troubleshooting).
-- Añadidos mismos 5 códigos a THEME_FIELDS.
-- VARIANT_FIELDS sin vídeo (decisión de negocio: vídeos solo a nivel modelo).
-- Separación de extensiones: IMAGE_EXTENSIONS (.jpg, .jpeg, .png, .webp) y VIDEO_EXTENSIONS (.mp4, .webm).
-- VALID_EXTENSIONS = unión de ambas.
-- METADATA_MAP extendido con metadatos de vídeo (Technical/Installation, Technical/Pairing, Support/App, etc.).
+**VCN (Conectividad) — Punto 3:**
+- Añadidos: Resumen intro ("¿Qué vas a ver?").
+- Añadidos: CTA Soporte (customer.garza.es) en cierre.
 
-**parser.py — COMPLETO v3.2:**
-- Nuevo campo `media_type` en dataclass ParsedAsset ("image" o "video").
-- Nueva función `_detect_media_type(ext)` que clasifica según extensión.
-- Lógica legacy BLOQUEADA para vídeos (solo aplica a imágenes).
-- Validación de códigos separada: códigos de vídeo (3 letras) vs códigos de imagen (2 letras generalmente).
+**VCF (Configuración) — Punto 4 (Reescritura completa):**
+- Nuevo criterio: **Esencial vs Avanzada**.
+  - **ESENCIAL:** Configuraciones sin las cuales el producto NO funciona (ej: conexión WiFi inicial, dar alta en app). Van PRIMERO.
+  - **AVANZADA:** Configuraciones opcionales o de optimización (ej: cambiar zona horaria, ajustar sensibilidad). Van DESPUÉS.
+- Estrategia bundlelización: Se pueden agrupar varias configs breves en un solo vídeo si son del mismo nivel de criticidad.
+- Badges visuales: Mostrar "ESENCIAL" o "AVANZADO" en pantalla para claridad.
+- Añadidos: Resumen intro ("¿Qué vas a ver?").
+- Añadidos: CTA Soporte (customer.garza.es) en cierre.
 
-**tests/test_parser.py — 25/25 tests pasando:**
-- Nueva clase `TestParseVideos`: 6 tests (VMK, VINS, VCN, VCF, VTR + extensión .webm).
-- Nuevo test en `TestParseLegacy`: verifica que legacy NO se aplica a vídeos.
-- Nuevo test en `TestParseInvalid`: código de vídeo inválido.
-- Total: 25 tests (antes 17, +8 nuevos).
+**VTR (Troubleshooting) — Punto 5:**
+- Añadidos: Resumen intro ("¿Qué vas a ver?").
+- Añadidos: CTA Soporte (customer.garza.es) en cierre (sustituye "Cierre" genérico anterior).
 
-**dam_ingest.py — Actualizado docstrings v3.2:**
-- Lógica preparada para bifurcar `upload_video()` vs `upload_image()` según `media_type`.
-- Documentación actualizada.
+**Patrón común establecido:**
+Todos los playbooks (excepto VMK que es marketing) ahora incluyen:
+- **Resumen intro:** "¿Qué vas a ver?" — establece expectativas.
+- **CTA Soporte:** Cierre dirigiendo a customer.garza.es para soporte adicional.
+Esto crea consistencia en experiencia de usuario y facilita producción por lotes.
 
-#### 3. Commits realizados
-- `7abfa54`: scaffolding Python base (sesión anterior).
-- `a71ac35`: Update to v3.2: add video support (5 types) and reorganize docs.
-- Ambos commits pusheados a main en GitHub.
+#### 2. Nuevo archivo de ejemplo creado
+- **reference/GUION_VMK_EJEMPLO_401275.md:** Guión ficticio completo para una bombilla LED WiFi Garza Smart siguiendo el playbook VMK. Incluye tiempos, planos, narración y música. Sirve como plantilla para agencias/productoras.
 
-### Módulos del proyecto (estado actual)
+#### 3. Tema abierto para próxima sesión: ESTRATEGIA MULTIIDIOMA DE VÍDEOS
+
+**Problema:** Cómo producir vídeos localizables a otros idiomas con equilibrio coste/calidad.
+
+**Consideraciones clave:**
+- **Texto en pantalla:** Difícil de localizar. Preferir iconografía/números universales o plantillas editables (After Effects, Motion, etc.).
+- **Voz narrada sin actor en pantalla:** Fácil de sustituir con AI.
+  - Herramientas candidatas: ElevenLabs (voz AI premium), HuggingFace SeamlessM4T (voice cloning + TTS), Whisper (transcripción) + TTS local.
+- **Actor hablando a cámara:** Lip-sync caro y complejo. Posible solo para VMK (marketing, puede quedarse en inglés/español sin localizar).
+- **Separar capas:** Master visual mudo + voz y textos como capas independientes facilita localización.
+- **Trade-off:** Actor genera confianza en marketing pero complica localización. Solución posible: actor solo en VMK, voz en off para VINS/VCN/VCF/VTR.
+- **YouTube auto-dubbing:** Google ofrece auto-dubbing multiidioma gratis para creadores. Explorar viabilidad para canal Garza.
+
+**Herramientas a evaluar:**
+- ElevenLabs (voz AI)
+- HuggingFace (SeamlessM4T/MMS para voice cloning)
+- Whisper (OpenAI) para transcripción
+- YouTube auto-dubbing (Google)
+
+**Estado:** Pendiente de decisión en próxima sesión. Por ahora producir en español con estructura localizable (iconos, capas separadas).
+
+### Módulos del proyecto (estado actual — SIN CAMBIOS en código respecto a sesión anterior)
 
 | Módulo | Estado | Notas |
 |--------|--------|-------|
@@ -56,6 +75,10 @@ Actualización del proyecto DAM de v3.1 (solo imágenes) a v3.2 (imágenes + ví
 | `test_parser.py` | ✅ 25/25 passing | Cobertura completa (imágenes, vídeos, legacy, inválidos) |
 | `saleslayer.py` | 🔄 ESQUELETO | Clase base creada, métodos sin implementar |
 | `dam_ingest.py` | 🔄 ESQUELETO FUNCIONAL | Orquestación lista, falta integrar API |
+
+**Documentación actualizada:**
+- `reference/VIDEO_PLAYBOOKS.md` → Versión mejorada con patrón común (Resumen + CTA).
+- `reference/GUION_VMK_EJEMPLO_401275.md` → Nuevo: ejemplo de guión completo.
 
 ## Problemas abiertos
 
@@ -85,7 +108,14 @@ Actualización del proyecto DAM de v3.1 (solo imágenes) a v3.2 (imágenes + ví
 
 ## Próximo paso concreto
 
-**INMEDIATO al retomar (CRÍTICO):**
+**OPCIÓN A — Continuar con documentación (NO requiere credenciales):**
+1. **Decidir estrategia multiidioma de vídeos:**
+   - Evaluar herramientas AI de voz (ElevenLabs, HuggingFace, Whisper).
+   - Definir arquitectura de capas (visual mudo + audio independiente).
+   - Decidir: ¿Actor solo en VMK o también en VINS/VCN/VCF/VTR?
+   - Documentar decisión en nuevo archivo (ej: `docs/estrategia-multiidioma.md`).
+
+**OPCIÓN B — Continuar con código (REQUIERE credenciales — BLOQUEADO):**
 1. **Obtener credenciales Sales Layer:**
    - Crear archivo `.env` real desde `.env.example`.
    - SL_API_URL, SL_CONNECTOR_ID, SL_SECRET_KEY.
@@ -98,7 +128,7 @@ Actualización del proyecto DAM de v3.1 (solo imágenes) a v3.2 (imágenes + ví
    - Implementar método de prueba (ej: `get_connector_info()`).
    - Hacer request de test para verificar credenciales.
 
-**DESPUÉS de conectividad probada:**
+**DESPUÉS de conectividad probada (solo si OPCIÓN B):**
 4. Implementar `get_product()`, `get_variant()`, `get_theme()`.
 5. Implementar `upload_image()` y `upload_video()`.
 6. Implementar `set_metadata()` (dam_type, dam_context).
@@ -106,21 +136,27 @@ Actualización del proyecto DAM de v3.1 (solo imágenes) a v3.2 (imágenes + ví
 8. Integrar todo en `dam_ingest.py` con manejo de errores robusto.
 9. Prueba piloto: 10 activos (5 imágenes + 5 vídeos) en entorno staging.
 
-## Notas de sesión
+**RECOMENDACIÓN:** Mientras no haya credenciales, avanzar en OPCIÓN A (estrategia multiidioma). Es trabajo productivo que desbloquea decisiones de producción.
+
+## Notas de sesión (2026-02-13)
 
 ### Logros clave
-- **v3.2 completa y testeada:** El proyecto pasó de soportar solo imágenes (v3.1) a soportar imágenes + vídeo (v3.2) con test coverage completo.
-- **Arquitectura limpia:** La separación entre config/parser/API client/orchestration permitió añadir vídeo sin tocar la lógica existente.
-- **Decisión de negocio documentada:** Vídeos solo en PRODUCTOS y TEMAS, no en VARIANTES (porque aplican al modelo completo, no al SKU).
-- **Commits bien estructurados:** Cada feature en su commit (scaffolding base → v3.2 video).
+- **Estandarización de playbooks:** Todos los vídeos (excepto VMK) ahora siguen un patrón común: Resumen intro + CTA Soporte (customer.garza.es).
+- **Criterio VCF Esencial vs Avanzada:** Jerarquización de configuraciones según criticidad. Esto facilita producción y priorización de vídeos.
+- **Guión de ejemplo creado:** GUION_VMK_EJEMPLO_401275.md sirve como plantilla para agencias/productoras.
+- **Tema multiidioma identificado:** Se abrió tema estratégico clave para internacionalización del contenido. Pendiente de decisión pero ya se tienen consideraciones técnicas claras.
 
 ### Lecciones aprendidas
-- **Legacy solo para imágenes:** Los vídeos son nuevos, no tienen nomenclatura heredada. Test específico para verificar que legacy no se aplica a vídeos.
-- **Extensiones separadas:** IMAGE_EXTENSIONS y VIDEO_EXTENSIONS separadas facilita añadir nuevos formatos (ej: .svg, .mov).
-- **Metadata map extensible:** METADATA_MAP en config.py permite añadir nuevos contextos sin tocar parser.
+- **Patrones comunes facilitan producción:** Establecer elementos estándar (Resumen + CTA) reduce fricción en producción y mejora UX.
+- **Jerarquización crítica en VCF:** Distinguir entre configuraciones esenciales vs avanzadas evita frustración del usuario (ej: ver vídeo de zona horaria antes del de conectar WiFi sería mal UX).
+- **Localización requiere planificación temprana:** Decisiones sobre texto en pantalla, actor vs voz en off, y arquitectura de capas afectan costes de localización dramáticamente.
 
-### Bloqueador crítico
+### Bloqueador crítico (sin cambios)
 **Credenciales Sales Layer faltantes:** Todo el desarrollo de integración API está bloqueado hasta obtener credenciales válidas y documentación.
 
+### Tema abierto (nuevo)
+**Estrategia multiidioma de vídeos:** Requiere decisión sobre herramientas AI, arquitectura de capas y trade-offs actor/voz. Bloquea escalamiento internacional del contenido.
+
 ### Próxima milestone
-**Integración API Sales Layer:** Una vez desbloqueado el problema de credenciales, el siguiente hito es tener el cliente API funcional con al menos un método (get_product) probado contra el entorno real.
+**Opción A (preferida mientras no haya credenciales):** Definir estrategia multiidioma de vídeos.
+**Opción B (si se obtienen credenciales):** Integración API Sales Layer.
