@@ -35,9 +35,9 @@ Integramos los vídeos en la fórmula maestra `ID_TIPO_SERIE`.
 
 | Código | Categoría | Metadata TYPE | Metadata CONTEXT | Ejemplo |
 | :--- | :--- | :--- | :--- | :--- |
-| **VMK** | Marketing | Marketing | Demo / Hero | `401275_VMK_01.mp4` |
-| **VSET** | Setup | Technical | Setup Guide | `401275_VSET_01.mp4` |
-| **VTR** | Soporte | Support | Troubleshooting | `401275_VTR_01.mp4` |
+| **VMK** | Marketing | Marketing | Demo / Hero | `LYRA_VMK_01.mp4` |
+| **VSET** | Setup | Technical | Setup Guide | `HEROS_VSET_01.mp4` |
+| **VTR** | Soporte | Support | Troubleshooting | `ARGOS_VTR_01.mp4` |
 
 ---
 
