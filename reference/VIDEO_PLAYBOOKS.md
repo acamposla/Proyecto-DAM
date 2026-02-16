@@ -1,7 +1,7 @@
-# �� Garza Video Playbooks: Guiones Tipo
+# Garza Video Playbooks: Guiones Tipo
 
 **Documento:** Estándares de Narrativa
-**Versión:** 3.0 (Simplificada)
+**Versión:** 4.0 (Unificada)
 **Objetivo:** Guías rápidas para producción de vídeo.
 
 ---
@@ -21,67 +21,68 @@
 
 ---
 
-## 2. VINS - Instalación Física (Hardware)
-**Objetivo:** Guiar al usuario en el montaje físico sin frustración.
-**Duración ideal:** Variable (lo que tome el proceso).
-**Canal:** QR en la caja, Ficha técnica, Youtube Soporte.
+## 2. VSET - Video Setup (Guía Completa de Puesta en Marcha)
+**Objetivo:** Llevar al usuario de "abrir la caja" a "producto funcionando" en un solo vídeo.
+**Duración ideal:** Variable según complejidad del producto.
+**Canal:** QR en la caja, Ficha técnica, YouTube Soporte, App.
+
+### Principio: Modularidad
+Cada producto necesita una combinación distinta de pasos. El vídeo incluye solo las secciones que apliquen:
+
+| Sección | Incluir cuando... | Ejemplo producto |
+|---------|-------------------|------------------|
+| **Instalación** | El producto requiere montaje físico (tornillos, cables, clemas) | Aplique solar, downlight, cámara IP |
+| **Conectividad** | El producto se conecta a WiFi/Bluetooth/Hub | Bombilla smart, enchufe smart, sensor |
+| **Configuración** | El producto necesita ajustes en app para funcionar bien | Termostato, cámara con zonas, sensor con sensibilidad |
+
+Un producto simple (ej: bombilla smart que se enrosca) puede saltarse Instalación entera. Un producto no-smart (ej: aplique solar básico) puede saltarse Conectividad y Configuración.
 
 ### Estructura Narrativa
+
+**INTRO (obligatoria):**
 1.  **Presentación del producto (5s):** Una frase que define qué es y qué hace. Ej: *"Andros es un aplique solar de pared con sensor de movimiento y función autolink que permite encender varios apliques a la vez"*.
-2.  **Resumen (10s):** "¿Qué vas a ver en este vídeo?" Enumerar brevemente los pasos clave para que el usuario sepa qué esperar antes de empezar.
+2.  **Resumen (10s):** "¿Qué vas a ver en este vídeo?" Enumerar las secciones que se van a cubrir para que el usuario sepa qué esperar.
+
+**SECCIÓN A — Instalación (si aplica):**
 3.  **Inventario:** "Esto es lo que viene en la caja y estas son las herramientas que necesitas". (Plano cenital/Flat lay).
-4.  **Seguridad (Crítico):** "Baja los plomos antes de empezar". (Icono alerta visual). Solo si aplica al producto.
-5.  **Paso a Paso (Body):** Planos detalle de las manos. Sin música molesta. Cada paso numerado en pantalla (Paso 1, Paso 2).
-6.  **Check Final:** "Si ves esta luz verde / escuchas este pitido, está bien instalado".
-7.  **Mantenimiento (15s):** 2-3 tips breves de cuidado del producto. Ej: *"Pasa un paño húmedo por la placa solar cada pocas semanas para evitar acumulación de polvo"*, *"Comprueba que el sensor no esté obstruido por ramas u objetos"*.
-8.  **CTA Soporte:** "¿No ha ido bien? Entra en **customer.garza.es** y abre un ticket. Te ayudamos." (Mostrar URL + QR en pantalla).
+4.  **Seguridad:** "Baja los plomos antes de empezar". (Icono alerta visual). Solo si aplica.
+5.  **Paso a Paso:** Planos detalle de las manos. Sin música molesta. Cada paso numerado en pantalla (Paso 1, Paso 2).
+6.  **Check Instalación:** "Si ves esta luz verde / escuchas este pitido, está bien instalado".
 
-**Estilo Visual:** Plano fijo, iluminación clínica (blanco), ritmo pausado, zooms a tornillos/cables.
+**SECCIÓN B — Conectividad (si aplica):**
+7.  **Pre-requisitos:** "Asegúrate de estar en una red 2.4GHz y tener el Bluetooth activado". (Mostrar iconografía).
+8.  **Modo Pairing:** "Cómo poner el dispositivo en modo emparejamiento". (Ej: encender/apagar 3 veces).
+9.  **La App (Split Screen):** Pantalla partida obligatoria. Izquierda: Producto parpadeando. Derecha: Grabación del móvil pulsando "+".
+10. **Check Conectividad:** Muestra la confirmación en la App (Check verde) y el producto dejando de parpadear.
 
----
+**SECCIÓN C — Configuración (si aplica):**
 
-## 3. VCN - Conectividad (IoT / Pairing)
-**Objetivo:** Conseguir que el dispositivo se conecte a la App a la primera.
-**Duración ideal:** < 90s.
-**Canal:** App (durante el proceso), QR inicio rápido.
+*Criterio: Esencial vs Avanzada.* Las configuraciones esenciales (sin ellas el producto no funciona bien) van siempre primero. Las avanzadas mejoran la experiencia pero no son críticas. Se pueden bundlelizar varias en un solo bloque si son breves.
 
-### Estructura Narrativa
-1.  **Resumen (10s):** "¿Qué vas a ver en este vídeo?" Enumerar brevemente los pasos (conectar a WiFi, emparejar en la App, confirmar).
-2.  **Pre-requisitos:** "Asegúrate de estar en una red 2.4GHz y tener el Bluetooth activado". (Mostrar iconografía).
-3.  **Modo Pairing:** "Cómo poner la bombilla en modo parpadeo". (Resetear: encender/apagar 3 veces).
-4.  **La App (Split Screen):** Pantalla partida obligatoria. Izquierda: Producto parpadeando. Derecha: Grabación del móvil pulsando "+".
-5.  **Éxito:** Muestra la confirmación en la App (Check verde) y el producto dejando de parpadear.
-6.  **CTA Soporte:** "¿No se ha conectado? Entra en **customer.garza.es** y abre un ticket. Te ayudamos." (Mostrar URL + QR en pantalla).
+11. **Configuraciones Esenciales:** Paso a paso de cada configuración mínima. Marcar visualmente como "ESENCIAL". Ej: *"Sin este paso, el sensor no detectará movimiento"*.
+12. **Confirmación de funcionamiento:** Mostrar que el producto ya funciona con lo esencial.
+13. **Configuraciones Avanzadas (opcional):** Funciones adicionales. Ej: *"Ahora vamos a programar que solo se encienda de noche"*. Patrón "Si pasa esto -> Haz aquello".
 
-**Estilo Visual:** Split screen (Móvil + Realidad). Grafismos destacando dónde pulsar en la App.
+**CIERRE (obligatorio):**
+14. **Resultado:** Mostrar el producto funcionando en su contexto real de uso (lifestyle).
+15. **Mantenimiento:** 2-3 tips breves de cuidado. Ej: *"Pasa un paño húmedo por la placa solar cada pocas semanas"*.
+16. **CTA Soporte:** "¿No ha ido bien? Entra en **customer.garza.es** y abre un ticket. Te ayudamos." (Mostrar URL + QR en pantalla).
 
----
+### Ejemplos de combinación por producto
 
-## 4. VCF - Configuración (App & Software)
-**Objetivo:** Asegurar que el usuario completa las configuraciones esenciales y descubra las avanzadas.
-**Duración ideal:** Modular. Se pueden agrupar varias configuraciones en un solo vídeo si son breves.
-**Canal:** Academia App, Blog, YouTube.
+| Producto | Instalación | Conectividad | Configuración | Duración aprox. |
+|----------|:-----------:|:------------:|:-------------:|:---------------:|
+| Aplique solar básico | si | - | - | 2-3 min |
+| Bombilla smart WiFi | - | si | si | 2-3 min |
+| Cámara IP exterior | si | si | si | 5-8 min |
+| Enchufe smart | - | si | - | 1-2 min |
+| Termostato smart | si | si | si | 5-8 min |
 
-### Criterio: Esencial vs Avanzada
-Cada producto tiene configuraciones de dos niveles:
-- **Esenciales:** Sin ellas el producto no funciona correctamente. Son obligatorias y van siempre primero. Ej: *asignar habitación, conectar al hub, calibrar sensor*.
-- **Avanzadas:** Mejoran la experiencia pero no son críticas. Ej: *crear rutinas, programar horarios, personalizar colores*.
-
-Cuando un producto tiene pocas configuraciones, se pueden agrupar (esenciales + avanzadas) en un solo vídeo. Si tiene muchas, separar en vídeos distintos priorizando siempre las esenciales primero.
-
-### Estructura Narrativa
-1.  **Resumen (10s):** "¿Qué vas a ver en este vídeo?" Describir qué configuraciones se van a cubrir y marcar cuáles son esenciales.
-2.  **Configuraciones Esenciales (primero siempre):** Paso a paso de cada configuración mínima necesaria. Marcar visualmente como "ESENCIAL" en pantalla. Ej: *"Sin este paso, el sensor no detectará movimiento"*.
-3.  **Confirmación de funcionamiento:** Mostrar que el producto ya funciona correctamente con lo esencial. Ej: *"Listo. Tu sensor ya detecta movimiento y enciende la luz"*.
-4.  **Configuraciones Avanzadas (opcional):** Funciones adicionales que mejoran la experiencia. Ej: *"Ahora vamos a programar que solo se encienda de noche"*. Usar el patrón "Si pasa esto -> Haz aquello".
-5.  **Resultado:** Muestra el resultado real del producto configurado en su contexto de uso.
-6.  **CTA Soporte:** "¿No te ha funcionado? Entra en **customer.garza.es** y abre un ticket. Te ayudamos." (Mostrar URL + QR en pantalla).
-
-**Estilo Visual:** Grabación de pantalla del móvil (Screencast) con punteros visuales táctiles. Usar badges "ESENCIAL" / "AVANZADO" para distinguir visualmente cada bloque.
+**Estilo Visual:** Plano fijo para instalación, split screen para conectividad, screencast para configuración. Transiciones claras entre secciones con título de separación ("INSTALACIÓN" / "CONECTIVIDAD" / "CONFIGURACIÓN"). Badges "ESENCIAL" / "AVANZADO" en la sección de configuración.
 
 ---
 
-## 5. VTR - Troubleshooting (Soporte)
+## 3. VTR - Troubleshooting (Soporte)
 **Objetivo:** Resolver un bloqueo específico (Offline, Error).
 **Duración ideal:** 30s - 60s.
 **Canal:** Chatbot, FAQ Web.

@@ -1,4 +1,4 @@
-"""Configuración y constantes del DAM v3.2 (Imágenes + Vídeo)."""
+"""Configuración y constantes del DAM v4.0 (Imágenes + Vídeo unificado)."""
 
 import os
 from dotenv import load_dotenv
@@ -21,11 +21,9 @@ PRODUCT_FIELDS = {
     "FMD":  "img_fmd",
     "FT":   "img_ft",
     "LF":   "img_lf",
-    # Vídeos
+    # Vídeos (3 tipos)
     "VMK":  "vid_mk",
-    "VINS": "vid_ins",
-    "VCN":  "vid_cn",
-    "VCF":  "vid_cf",
+    "VSET": "vid_set",
     "VTR":  "vid_tr",
 }
 
@@ -44,11 +42,9 @@ THEME_FIELDS = {
     "FM":   "img_fm",
     "FMD":  "img_fmd",
     "FT":   "img_ft",
-    # Vídeos
+    # Vídeos (3 tipos)
     "VMK":  "vid_mk",
-    "VINS": "vid_ins",
-    "VCN":  "vid_cn",
-    "VCF":  "vid_cf",
+    "VSET": "vid_set",
     "VTR":  "vid_tr",
 }
 
@@ -65,11 +61,9 @@ METADATA_MAP = {
     "FM":   ("Infographic", "Mosaic"),
     "FMD":  ("Infographic", "Decomposed"),
     "FT":   ("Detail",      "Feature"),
-    # Vídeos
+    # Vídeos (3 tipos)
     "VMK":  ("Marketing",   "Demo / Hero"),
-    "VINS": ("Technical",   "Installation"),
-    "VCN":  ("Technical",   "Pairing / IoT"),
-    "VCF":  ("Technical",   "App Usage"),
+    "VSET": ("Technical",   "Setup Guide"),
     "VTR":  ("Support",     "Troubleshooting"),
 }
 

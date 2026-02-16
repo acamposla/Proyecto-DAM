@@ -1,4 +1,4 @@
-"""Tests para el parser de nomenclatura DAM v3.2 (imágenes + vídeo)."""
+"""Tests para el parser de nomenclatura DAM v4.0 (imágenes + vídeo unificado)."""
 
 import pytest
 from src.parser import parse_filename, classify_identifier
@@ -21,7 +21,7 @@ class TestClassifyIdentifier:
         assert classify_identifier("DALIA") == "theme"
 
 
-# --- Imágenes v3.2 ---
+# --- Imágenes ---
 
 class TestParseImages:
     def test_packshot_product(self):
@@ -69,7 +69,7 @@ class TestParseImages:
         assert asset.dam_context == "Hero Vertical"
 
 
-# --- Vídeos v3.2 ---
+# --- Vídeos (3 tipos: VMK, VSET, VTR) ---
 
 class TestParseVideos:
     def test_video_marketing(self):
@@ -82,31 +82,22 @@ class TestParseVideos:
         assert asset.dam_type == "Marketing"
         assert asset.dam_context == "Demo / Hero"
 
-    def test_video_installation(self):
-        asset = parse_filename("401275_VINS_01.mp4")
+    def test_video_setup(self):
+        asset = parse_filename("401275_VSET_01.mp4")
         assert asset is not None
-        assert asset.type_code == "VINS"
+        assert asset.identifier == "401275"
+        assert asset.type_code == "VSET"
         assert asset.media_type == "video"
         assert asset.dam_type == "Technical"
-        assert asset.dam_context == "Installation"
+        assert asset.dam_context == "Setup Guide"
 
-    def test_video_connectivity(self):
-        asset = parse_filename("401275_VCN_01.mp4")
-        assert asset is not None
-        assert asset.type_code == "VCN"
-        assert asset.media_type == "video"
-        assert asset.dam_type == "Technical"
-        assert asset.dam_context == "Pairing / IoT"
-
-    def test_video_config(self):
-        asset = parse_filename("SMART_VCF_02.mp4")
+    def test_video_setup_theme(self):
+        asset = parse_filename("SMART_VSET_01.mp4")
         assert asset is not None
         assert asset.identifier == "SMART"
-        assert asset.type_code == "VCF"
+        assert asset.type_code == "VSET"
         assert asset.target == "theme"
         assert asset.media_type == "video"
-        assert asset.dam_type == "Technical"
-        assert asset.dam_context == "App Usage"
 
     def test_video_troubleshooting(self):
         asset = parse_filename("401275_VTR_01.mov")
@@ -121,6 +112,11 @@ class TestParseVideos:
         assert asset is not None
         assert asset.media_type == "video"
         assert asset.type_code == "VMK"
+
+    def test_video_setup_multiple_series(self):
+        asset = parse_filename("401275_VSET_02.mp4")
+        assert asset is not None
+        assert asset.series == "02"
 
 
 # --- Legacy (solo imágenes) ---
@@ -171,3 +167,9 @@ class TestParseInvalid:
 
     def test_unknown_video_code(self):
         assert parse_filename("401275_VXX_01.mp4") is None
+
+    def test_old_codes_no_longer_valid(self):
+        # VINS, VCN, VCF ya no existen como códigos válidos
+        assert parse_filename("401275_VINS_01.mp4") is None
+        assert parse_filename("401275_VCN_01.mp4") is None
+        assert parse_filename("401275_VCF_01.mp4") is None
