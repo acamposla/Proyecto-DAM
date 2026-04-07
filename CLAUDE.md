@@ -1,4 +1,5 @@
 # CLAUDE.md - Contexto del Proyecto DAM Garza/Imprex
+## Scope: Imprex, Vértice
 
 ## 1. Perfil del Proyecto
 * **Rol:** Ingeniero de Datos & Arquitecto de Soluciones.
