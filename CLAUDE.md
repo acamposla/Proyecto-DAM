@@ -142,3 +142,15 @@ Se pueden bundlelizar varias configs breves en un solo bloque. Badges visuales "
 8. ⬜ **Integración completa dam_ingest.py:** Conectar parser + cliente real + manejo de errores + rate limits.
 9. ⬜ **Prueba piloto:** 10 activos reales (5 imágenes + 5 vídeos) contra Sales Layer de staging/producción.
 10. ⬜ **Documentación para agencias:** Guía de nomenclatura consolidada + proceso de subida (incorporar playbooks de vídeo).
+
+
+## Integración con el sistema
+
+- **Ficha Notion**: [rellenar URL o ID en DB Proyectos — ficha índice, sin sub-tareas]
+- **Capa de ejecución**: Asana
+- **Tracking URL**: [pendiente — rellenar con URL del proyecto en Asana al retomar trabajo aquí]
+- **Routing**: L-V 09:00-17:00 (horario Imprex)
+
+Este repo pertenece al ecosistema Imprex/Garza. Las tareas se gestionan en Asana (fuera del sistema personal). Al cerrar sesión, `cierre-sesion` no actualiza Asana automáticamente — lista al usuario los cambios pendientes para actualizar manualmente.
+
+Reglas completas del sistema en `~/dotfiles/claude/skills/cierre-sesion/references/sistema-productividad.md`.
