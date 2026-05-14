@@ -146,11 +146,9 @@ Se pueden bundlelizar varias configs breves en un solo bloque. Badges visuales "
 
 ## Integración con el sistema
 
-- **Ficha Notion**: [rellenar URL o ID en DB Proyectos — ficha índice, sin sub-tareas]
-- **Capa de ejecución**: Asana
-- **Tracking URL**: [pendiente — rellenar con URL del proyecto en Asana al retomar trabajo aquí]
-- **Routing**: L-V 09:00-17:00 (horario Imprex)
+- **Capa de ejecución**: Ninguno
+- **Routing**: bajo demanda (Imprex es cliente externo desde 2026-04-28)
 
-Este repo pertenece al ecosistema Imprex/Garza. Las tareas se gestionan en Asana (fuera del sistema personal). Al cerrar sesión, `cierre-sesion` no actualiza Asana automáticamente — lista al usuario los cambios pendientes para actualizar manualmente.
+Repo del ecosistema Imprex/Garza. Como cliente externo, el tracking interno lo lleva Imprex en su sistema corporativo (fuera de nuestro alcance). Desde nuestro lado, este repo no se agrega al Sprint Personal hasta que retomemos trabajo facturable continuado aquí — entonces se cambiará a `Capa = GH Project` con `Proyecto = Imprex (cliente)` (mismo patrón que `Automatizaci-nCat-logos`, `redireccion-qrs`, `camaras`).
 
 Reglas completas del sistema en `~/dotfiles/claude/skills/cierre-sesion/references/sistema-productividad.md`.
